@@ -10,13 +10,11 @@ def dh_transform(a, alpha, d, tetha):
     d: link ofseti
     tetha: eklem açısı
     """
-    alpha_rad = np.radians(alpha)
-    tetha_rad = np.radians(tetha)
 
     T = np.array([
-        [np.cos(tetha_rad), -np.sin(tetha_rad)*np.cos(alpha_rad),  np.sin(tetha_rad)*np.sin(alpha_rad), a*np.cos(tetha_rad)],
-        [np.sin(tetha_rad),  np.cos(tetha_rad)*np.cos(alpha_rad), -np.cos(tetha_rad)*np.sin(alpha_rad), a*np.sin(tetha_rad)],
-        [0,                  np.sin(alpha_rad),                   np.cos(alpha_rad),                  d],
+        [np.cos(tetha), -np.sin(tetha)*np.cos(alpha),  np.sin(tetha)*np.sin(alpha), a*np.cos(tetha)],
+        [np.sin(tetha),  np.cos(tetha)*np.cos(alpha), -np.cos(tetha)*np.sin(alpha), a*np.sin(tetha)],
+        [0,                  np.sin(alpha),                   np.cos(alpha),                  d],
         [0,                  0,                                   0,                                  1]
     ])
     return T
@@ -28,15 +26,17 @@ def forward_kinematics(q, L):
     L: np.ndarray (L1, L2, L3)
     Çıktı: np.ndarray (x, y, z)
     """
-    T01 = dh_transform(0, 0, 0, q[0])
-    T12 = dh_transform(L[0], 0, 0, q[1])
-    T23 = dh_transform(L[1], 0, 0, q[2])
+    A1 = dh_transform(L[0], 0, 0, q[0])
+    A2 = dh_transform(L[1], 0, 0, q[1])
+    A3 = dh_transform(L[2], 0, 0, q[2])
     
-    T02 = T01 @ T12
-    T03 = T02 @ T23
+    T03 = A1 @ A2 @ A3
     
     position = T03[:3, 3]
-    return position
+    rotation = T03[:3, :3]
+    phi = np.arctan2(rotation[1, 0], rotation[0, 0])
+
+    return position, phi
 
 
 if __name__ == "__main__":
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     print(f"End-effector position: {position}\n")
     print(f"Target position: {target}\n")
-    print(f"Position error: {np.linalg.norm(position - target)}\n")
+    #print(f"Position error: {np.linalg.norm(position - target)}\n")
     
     
     print(f"Joint limits: {q_limits}\n")
