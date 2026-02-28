@@ -1,0 +1,25 @@
+# Robot type: RRR_PLANAR
+ROBOT_TYPE=RRR_PLANAR
+
+# Link lengths (meters)
+L1=0.5
+L2=0.4
+L3=0.3
+
+# Joint limits (radians)
+Q1_MIN=-3.141592653589793
+Q1_MAX= 3.141592653589793
+Q2_MIN=-3.141592653589793
+Q2_MAX= 3.141592653589793
+Q3_MIN=-3.141592653589793
+Q3_MAX= 3.141592653589793
+
+# Sample joint vector for FK test (radians)
+Q_SAMPLE_1=0.0
+Q_SAMPLE_2=0.7853981633974483   # pi/4
+Q_SAMPLE_3=1.5707963267948966   # pi/2
+
+# IK target (meters) - for planar robot z should be 0
+TARGET_X=0.8
+TARGET_Y=0.2
+TARGET_Z=0.1
