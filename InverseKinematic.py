@@ -1,8 +1,7 @@
 import numpy as np
 from config import load_params_txt, get_robot_config
 from forwardKinematic import dh_transform, forward_kinematics
-
-import numpy as np
+from jacobian import jacobian_xyphi_planar_3r, det_jacobian_xyphi, is_singular
 
 def inverse_kinematics(target, L, phi=0.0):
     """
@@ -34,9 +33,9 @@ def inverse_kinematics(target, L, phi=0.0):
     return solutions
 
 def ik_test():
+    print("=== Inverse Kinematics Test ===")
     params = load_params_txt("robot_params.txt")
     robot_type, L, q_limits, q_sample, target = get_robot_config(params)
-
     phi = 0.0  # test için sabit seç
     sols = inverse_kinematics(target, L, phi=0.0)
 
@@ -47,7 +46,26 @@ def ik_test():
         print(f"\nSolution {i}: q = {q_sol}")
         print(f"FK p = {p_fk}, phi = {phi_fk}")
         print(f"Target xy = {target[:2]}, err_xy = {err_xy}")
+
+
+def jacobian_test(sols, L):
+    print("\n=== Jacobian & Singularity Test (det(J)=0) ===")
+    for i, q in enumerate(sols, 1):
+        J = jacobian_xyphi_planar_3r(q, L)
+        detJ = det_jacobian_xyphi(q, L)
+        sing = is_singular(q, L)
+
+        print(f"\nSolution {i}: q = {q}")
+        print("J(x,y,phi) =\n", J)
+        print("det(J) =", detJ)
+        print("singular? =", sing)
+
 if __name__ == "__main__":
+    params = load_params_txt("robot_params.txt")
+    robot_type, L, q_limits, q_sample, target = get_robot_config(params)
+    sols = inverse_kinematics(target, L, phi=0.0)
     ik_test()
+    jacobian_test(sols, L)
+    
 
    
