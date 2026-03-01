@@ -1,6 +1,6 @@
 import numpy as np
 from config import load_params_txt, get_robot_config
-from forwardKinematic import dh_transform, forward_kinematics
+from ForwardKinematic import dh_transform, forward_kinematics
 from jacobian import jacobian_xyphi_planar_3r, det_jacobian_xyphi, is_singular
 
 def inverse_kinematics(target, L, phi=0.0):

@@ -29,9 +29,11 @@ def forward_kinematics(q, L):
     A1 = dh_transform(L[0], 0, 0, q[0])
     A2 = dh_transform(L[1], 0, 0, q[1])
     A3 = dh_transform(L[2], 0, 0, q[2])
-    
+    print("A1:\n", A1)
+    print("A2:\n", A2)
+    print("A3:\n", A3)
     T03 = A1 @ A2 @ A3
-    
+    print("T03:\n", T03)
     position = T03[:3, 3]
     rotation = T03[:3, :3]
     phi = np.arctan2(rotation[1, 0], rotation[0, 0])
